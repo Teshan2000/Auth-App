@@ -1,4 +1,6 @@
 import 'package:auth_app/components/button.dart';
+import 'package:auth_app/screens/login.dart';
+import 'package:auth_app/services/authService.dart';
 import 'package:flutter/material.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -10,9 +12,29 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
   final _confirmPassController = TextEditingController();
+
+  void _register() async{
+    final result = await _authService.register(
+      _emailController.text, 
+      _passController.text,
+    );
+
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Registration successful!"))
+      );
+
+      Navigator.pushNamed(context, 'login');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Registration failed!"))
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +69,7 @@ class _RegisterFormState extends State<RegisterForm> {
               )),
             ),
           ),
+          const SizedBox(height: 15),   
           TextFormField(
             controller: _passController,
             decoration: InputDecoration(
@@ -74,6 +97,7 @@ class _RegisterFormState extends State<RegisterForm> {
               )),
             ),
           ),
+          const SizedBox(height: 15),   
           TextFormField(
             controller: _confirmPassController,
             decoration: InputDecoration(
@@ -101,10 +125,13 @@ class _RegisterFormState extends State<RegisterForm> {
               )),
             ),
           ),
+          const SizedBox(height: 20),   
           Button(
             title: 'Register', 
             disable: false, 
-            onPressed: () {}
+            onPressed: () {
+              _register();
+            }
           ),
         ],
       ),
