@@ -22,13 +22,17 @@ class _LoginFormState extends State<LoginForm> {
       _passController.text,
     );
 
-    try {
+    if (result.containsKey('accessToken')) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Login successful!"))
       );
-
-      Navigator.of(context).pushNamed('home');
-    } catch (e) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => Home(
+          accessToken: result['accessToken'], 
+          refreshToken: result['refreshToken'], 
+        ))
+      );
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Login failed!"))
       );

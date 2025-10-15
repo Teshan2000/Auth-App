@@ -18,22 +18,28 @@ class _RegisterFormState extends State<RegisterForm> {
   final _confirmPassController = TextEditingController();
 
   void _register() async{
-    final result = await _authService.register(
-      _emailController.text, 
-      _passController.text,
-    );
-
-    try {
+    if (_passController.text != _confirmPassController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration successful!"))
+        SnackBar(content: Text("Password do not match!"))
+      );
+    } else {
+      final result = await _authService.register(
+        _emailController.text, 
+        _passController.text,
       );
 
-      Navigator.pushNamed(context, 'login');
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration failed!"))
-      );
-    }
+      try {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registration successful!"))
+        );
+        print(result);
+        Navigator.pushNamed(context, 'login');
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registration failed!"))
+        );
+      }
+    } 
   }
 
   @override
