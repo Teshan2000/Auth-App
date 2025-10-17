@@ -1,10 +1,10 @@
-package com.postgresql.user_auth.repo;
+package com.example.auth_backend.repo;
 
-import com.postgresql.user_auth.model.User;
+import com.example.auth_backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
     
 }

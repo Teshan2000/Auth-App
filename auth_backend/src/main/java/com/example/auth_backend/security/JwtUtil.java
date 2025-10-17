@@ -1,4 +1,4 @@
-package com.postgresql.user_auth.security;
+package com.example.auth_backend.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

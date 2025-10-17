@@ -1,8 +1,8 @@
-package com.postgresql.user_auth.controller;
+package com.example.auth_backend.controller;
 
-import com.postgresql.user_auth.model.User;
-import com.postgresql.user_auth.repo.UserRepository;
-import com.postgresql.user_auth.security.JwtUtil;
+import com.example.auth_backend.model.User;
+import com.example.auth_backend.repo.UserRepository;
+import com.example.auth_backend.security.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public Map<String, String> register(@RequestBody User user) {
-        System.out.println("Received user: " + user.getUsername());
+        System.out.println("Received user: " + user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         return Map.of("message", "User registered successfully");
@@ -33,18 +33,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody Map<String, String> loginData) {
-        String username = loginData.get("username");    
+        String email = loginData.get("email");    
         String password = loginData.get("password");
 
-        User user = userRepo.findByUsername(username)
+        User user = userRepo.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        String accessToken = jwtUtil.generateToken(username);
-        String refreshToken = jwtUtil.generateToken(username);
+        String accessToken = jwtUtil.generateToken(email);
+        String refreshToken = jwtUtil.generateToken(email);
 
         return Map.of(
             "accessToken", accessToken,
